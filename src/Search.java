@@ -1,9 +1,15 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class Search extends JFrame {
     JLabel l1;
@@ -19,6 +25,7 @@ public class Search extends JFrame {
 
     JTable table;
     JScrollPane sp;
+    DefaultTableModel model;
 
     public Search() {
         setTitle("Search");
@@ -58,25 +65,36 @@ public class Search extends JFrame {
         b3 = new JButton("Retour");
         b3.setBounds(260, 250, 100, 30);
 
-        table = new JTable();
+        model = new DefaultTableModel();
+        model.addColumn("Id");
+        model.addColumn("Last Name");
+        model.addColumn("First Name");
+        model.addColumn("Age");
+        model.addColumn("Specialty");
+        model.addColumn("Level");
+        model.addColumn("Gender");
+        model.addColumn("Birthday");
+
+        table = new JTable(model);
         sp = new JScrollPane(table);
         sp.setBounds(400, 50, 560, 400);
 
         add(l1);
         add(l2);
         add(l3);
-
         add(cb1);
         add(cb2);
-
         add(b1);
         add(b2);
         add(b3);
         add(sp);
 
+        b1.addActionListener(e -> search());
+
         b2.addActionListener(e -> {
             cb1.setSelectedIndex(0);
             cb2.setSelectedIndex(0);
+            model.setRowCount(0);
         });
 
         b3.addActionListener(e -> {
@@ -84,13 +102,52 @@ public class Search extends JFrame {
             new StudentManger().setVisible(true);
         });
 
-        
-        String filiere = cb1.getSelectedItem().toString();
-        String niveau = cb2.getSelectedItem().toString();
-        Connection cn = Connect.getConnection();
-        // PreparedStatement ps = cn.prepareStatement(...);
-        // ResultSet rs = ps.executeQuery();
-        // Fill the table with id, lname, fname, age, ...
-        // b1.addActionListener(...)
+        // You can still change the query inside search()
+    }
+
+    public void search() {
+        String specialty = cb1.getSelectedItem().toString();
+        String level = cb2.getSelectedItem().toString();
+
+        try {
+            Connection mycn = Connect.getConnection();
+
+            if (mycn == null) {
+                System.out.println("connection failed");
+                return;
+            }
+
+            PreparedStatement ps = mycn.prepareStatement(
+                    "select * from students where specialty = ? and level = ?");
+            ps.setString(1, specialty);
+            ps.setString(2, level);
+
+            ResultSet rs = ps.executeQuery();
+
+            model.setRowCount(0);
+
+            while (rs.next()) {
+                String id = rs.getString("id");
+                String lname = rs.getString("lname");
+                String fname = rs.getString("fname");
+                int age = rs.getInt("age");
+                String spec = rs.getString("specialty");
+                String lev = rs.getString("level");
+                String gender = rs.getString("gender");
+                String birthday = rs.getString("birthday");
+
+                model.addRow(new Object[] { id, lname, fname, age, spec, lev, gender, birthday });
+            }
+
+            if (model.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(this, "Aucun etudiant trouve.");
+            }
+
+            rs.close();
+            ps.close();
+            mycn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
