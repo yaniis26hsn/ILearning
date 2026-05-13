@@ -222,7 +222,7 @@ public class StudentManger extends JFrame {
                 String gender = rs.getString("gender");
                 String birthday = rs.getString("birthday");
 
-                model.addRow(new Object[] { id, lname, fname, age, spec, lev, gender, birthday });
+                model.addRow(new Object[] { id, fname, lname, age, spec, lev, gender, birthday });
             }
 
             if (model.getRowCount() == 0) {
@@ -279,7 +279,6 @@ public class StudentManger extends JFrame {
 
             if(rows > 0) {
                 JOptionPane.showMessageDialog(this, "Etudiant modifie.");
-                projection();
             }
             else {
                 JOptionPane.showMessageDialog(this, "Aucun etudiant trouve.");
@@ -318,20 +317,43 @@ public class StudentManger extends JFrame {
                 return;
             }
 
+            PreparedStatement check = mycn.prepareStatement(
+                    "select * from students where id = ?");
+            check.setString(1, t1.getText());
+
+            ResultSet rs = check.executeQuery();
+
+            if(rs.next()) {
+                JOptionPane.showMessageDialog(this, "Cet id existe deja.");
+                rs.close();
+                check.close();
+                mycn.close();
+                return;
+            }
+
+            rs.close();
+            check.close();
+
             PreparedStatement ps = mycn.prepareStatement(
                     "insert into students values(?,?,?,?,?,?,?,?) ");
-            ps.setInt(1, Integer.parseInt(t2.getText()));
-            ps.setString(2, t3.getText());
-            ps.setString(3, t4.getText());
-            ps.setString(4, cb1.getSelectedItem().toString());
-            ps.setString(5, cb2.getSelectedItem().toString());
-            ps.setString(6, gender);
-            ps.setString(7, t7.getText());
-            ps.setString(8, t1.getText());
+            ps.setString(1, t1.getText());
+            ps.setInt(2, Integer.parseInt(t2.getText()));
+            ps.setString(3, t3.getText());
+            ps.setString(4, t4.getText());
+            ps.setString(5, cb1.getSelectedItem().toString());
+            ps.setString(6, cb2.getSelectedItem().toString());
+            ps.setString(7, gender);
+            ps.setString(8, t7.getText());
 
-            int rows = ps.executeInsert();
+            int rows = ps.executeUpdate();
 
-           // todo message sur le resultat
+            if(rows > 0) {
+                JOptionPane.showMessageDialog(this, "Etudiant ajoute.");
+            }
+            else {
+                JOptionPane.showMessageDialog(this, "Ajout impossible.");
+            }
+
             ps.close();
             mycn.close();
         } catch (Exception e) {
@@ -407,7 +429,6 @@ public class StudentManger extends JFrame {
 
             if(rows > 0) {
                 JOptionPane.showMessageDialog(this, "Etudiant supprime.");
-                projection();
             }
             else {
                 JOptionPane.showMessageDialog(this, "Aucun etudiant trouve.");

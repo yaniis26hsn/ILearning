@@ -136,7 +136,7 @@ public class Search extends JFrame {
                 String gender = rs.getString("gender");
                 String birthday = rs.getString("birthday");
 
-                model.addRow(new Object[] { id, lname, fname, age, spec, lev, gender, birthday });
+                model.addRow(new Object[] { id, fname, lname, age, spec, lev, gender, birthday });
             }
 
             if (model.getRowCount() == 0) {
