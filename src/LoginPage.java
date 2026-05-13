@@ -78,7 +78,6 @@ public class LoginPage extends JFrame {
            
             ResultSet rs = pstt.executeQuery() ;
             if(rs.next()){
-               JOptionPane.showMessageDialog(this, "Connexion reussie");
                dispose();
                new StudentManger().setVisible(true);
             }

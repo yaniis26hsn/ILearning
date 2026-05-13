@@ -67,13 +67,13 @@ public class Search extends JFrame {
 
         model = new DefaultTableModel();
         model.addColumn("Id");
-        model.addColumn("Last Name");
-        model.addColumn("First Name");
+        model.addColumn("prenom");
+        model.addColumn("nom");
         model.addColumn("Age");
-        model.addColumn("Specialty");
-        model.addColumn("Level");
-        model.addColumn("Gender");
-        model.addColumn("Birthday");
+        model.addColumn("Filliare");
+        model.addColumn("niveau");
+        model.addColumn("sexe");
+        model.addColumn("jour de naissance");
 
         table = new JTable(model);
         sp = new JScrollPane(table);
