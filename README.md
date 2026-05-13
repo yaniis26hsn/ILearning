@@ -58,6 +58,7 @@ PASSWORD : "admin123"
 <p align="center">
   <img src="pics/pic4.png" width="350"/>
 </p>
+
 ## STUDENT MANAGER : 
 -YOU CAN SELECT BY ID AND THEN UPDATE/DELETE
 -YOU CAN ADD NEW STUDENTS (USING A NEW ID)
