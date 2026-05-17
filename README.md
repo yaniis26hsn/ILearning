@@ -19,7 +19,7 @@ I used **SQLite in local mode (LocalDB)** to store data.
 The database mainly contains two tables:  
 - **authentication** (matricule, password)  
 - **student** (matricule, name, surname, birthDate, gender, department, level)
-- i used a populate.java file to create the tables/add dummy data each time it runs ( like that the software doesn't save the changes , you can modify it a bit to make it so )
+- i used a **populate.java** file to create the tables/add dummy data each time it runs ( like that the software does save the changes , you can modify it a bit so that it give you the same data each time  )
 
 ## Features  
 - User authentication  
